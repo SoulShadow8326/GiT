@@ -1,0 +1,109 @@
+{{define "profile"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#131520" />
+    <meta name="description" content="Website for Exun Girls in Tech 2025" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.PageTitle}}</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/components/main.css">
+    <link rel="stylesheet" href="/components/profile/profile.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+</head>
+<body>
+    {{template "header" .}}
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-avatar">
+                {{if .Img}}
+                   <img src="{{.Img}}" alt="{{.Name}}">
+                {{else}}
+                    {{if .Name}}{{index .Name 0}}{{end}}
+                {{end}}
+            </div>
+            
+            <h1 class="profile-name">{{.Name}}</h1>
+            <p class="profile-email">{{.Email}}</p>
+            
+            <div class="profile-bio-section">
+                {{if .IsOwnProfile}}
+                    <!-- Own profile - editable :D -->
+                    <div id="bioViewMode">
+                        <div class="profile-bio">
+                            <span id="bioText">{{if .Bio}}{{.Bio}}{{else}}<span class="empty-bio">No bio!</span>{{end}}</span>
+                        </div>
+                        <div class="bio-controls">
+                            <button class="btn btn-primary" onclick="enterEditMode()">Edit Bio</button>
+                        </div>
+                        <p class="bio-private-notice">
+                            {{if .BioPublic}}Bio status: public{{else}}Bio status: private{{end}}
+                        </p>
+                    </div>
+                    
+                    <div id="bioEditMode" class="bio-edit-mode" style="display: none;">
+                        <textarea id="bioInput" placeholder="Scribble away <<:">{{.Bio}}</textarea>
+                        <div class="bio-controls">
+                            <label class="bio-checkbox">
+                                <input type="checkbox" id="bioPublicCheck" {{if .BioPublic}}checked{{end}}>
+                                <span>Allow others to see my bio</span>
+                            </label>
+                        </div>
+                        <div class="bio-controls">
+                            <button class="btn btn-primary" onclick="saveBio()">Save</button>
+                            <button class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+                        </div>
+                    </div>
+                {{else}}
+                    <!-- Other user's profil -->
+                    {{if .ShowBio}}
+                        {{if .Bio}}
+                            <div class="profile-bio">{{.Bio}}</div>
+                        {{else}}
+                            <div class="profile-bio empty-bio">This user hasn't written a bio yet.</div>
+                        {{end}}
+                    {{else}}
+                        <div class="profile-bio empty-bio">Bio status: private</div>
+                    {{end}}
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+	{{if .Admin}}
+	<div class="attempt_logs_container">
+		<p class="admin_h">Admin Preview</p>
+		<div class="filter_sect">
+			<input type="text" placeholder="Filter by~" class="filter_input">
+			<select id="choices" name="choices">
+				<option value="opt2" class="filter-opt">Event</option>
+				<option value="opt3" class="filter-opt">Answer</option>
+				<option value="opt4" class="filter-opt">Time</option>
+			</select>
+		</div>
+		<div class="logs">
+			<div class="log">
+				<p>1. 3:41pm</p>
+				<p>ctf</p>
+				<p class="log_el">You should not be able to see this message. Reload.</p>
+			</div>
+		</div>
+	</div>
+	{{end}}
+
+    <script src="/components/profile/profile.js"></script>
+    {{template "footer" .}}
+</body>
+</html>
+{{end}}

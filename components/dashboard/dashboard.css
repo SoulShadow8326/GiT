@@ -1,0 +1,270 @@
+:root {
+	--background: #0f1115;
+	--card-bg: rgba(255,255,255,0.03);
+	--card-border: rgba(255,255,255,0.15);
+	--primary: #De3163;
+	--text: #ffffff;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+	background: var(--background);
+	color: var(--text);
+}
+
+.admin-chat-wrap {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    height: calc(100vh - 160px);
+}
+
+.admin-chat-sidebar {
+    width: 280px;
+    background: #171923;
+    border: 1px solid #2a2e3f;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 220px;
+}
+
+.admin-chat-sidebar h2 {
+    margin: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid #2a2e3f;
+    font-size: 16px;
+}
+
+.admin-chat-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 8px 0;
+}
+
+.admin-chat-item {
+    padding: 10px 16px;
+    border-bottom: 1px solid #2a2e3f;
+    cursor: pointer;
+}
+
+.admin-chat-item:hover {
+    background: #1d2030;
+}
+
+.admin-chat-item.active {
+    background: #22263a;
+}
+
+.admin-chat-item.unread {
+    color: #ff4d4d;
+    font-weight: 700;
+}
+
+.admin-chat-main {
+    flex: 1;
+    background: #171923;
+    border: 1px solid #2a2e3f;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.admin-chat-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid #2a2e3f;
+    font-weight: 600;
+}
+
+.admin-chat-messages {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    padding: 16px;
+    gap: 10px;
+    scroll-behavior: smooth;
+}
+
+.msg-row {
+    margin-bottom: 10px;
+}
+
+.msg-me {
+    text-align: right;
+}
+
+.msg-bubble {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #262a3f;
+    max-width: 80%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.msg-me .msg-bubble {
+    background: #De3163;
+    color: white;
+}
+
+.msg-content {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.msg-content {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-wrap;
+    max-width: 70ch;
+    display: inline-block;
+}
+
+.admin-chat-input {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #2a2e3f;
+}
+
+.admin-chat-input input {
+    flex: 1;
+}
+.form-input {
+	padding: 10px;
+	border-radius: 8px;
+	background: rgba(255,255,255,0.03);
+	color: var(--text);
+	border: 1px solid var(--card-border);
+	outline: none;
+    font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+}
+.button {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+}
+
+.admin-hints-wrap {
+    box-sizing: border-box;
+    padding: 16px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+#allLeadList > div {
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(255,255,255,0.02);
+}
+.msg-level{
+    color: #ffffff;
+    font-size: 32px;
+    font-weight: 700;
+}
+.admin-check-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 8px 0;
+}
+.admin-check-sidebar {
+    width: 280px;
+    background: #171923;
+    border: 1px solid #2a2e3f;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 220px;
+}
+
+.admin-check-sidebar h2 {
+    margin: 0;
+    padding: 12px 16px;
+    border-bottom: 1px solid #2a2e3f;
+    font-size: 16px;
+}
+
+.checkpoint-section {
+    position: relative;
+    padding-left: 32px;
+}
+
+.checkpoint-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.checkpoint-item:last-child {
+    margin-bottom: 0;
+}
+
+.checkpoint-item input.checkpoint-node {
+    position: absolute;
+    left: -32px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+    background: var(--background);
+    z-index: 2;
+    flex-shrink: 0;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.checkpoint-item input.checkpoint-node:focus {
+    box-shadow: 0 0 0 4px rgba(151,34,229,0.12);
+    outline: none;
+}
+
+.checkpoint-item input.checkpoint-node:checked {
+    background: var(--primary) center/60% no-repeat url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23fff' d='M20.285 6.708l-11.39 11.39-5.18-5.18 1.414-1.414 3.766 3.766 9.976-9.976z'/></svg>");
+    border-color: var(--primary);
+}
+
+.checkpoint-line {
+    position: absolute;
+    left: -22px;
+    top: 20px;
+    bottom: -24px;
+    width: 2px;
+    background: rgba(255,255,255,0.1);
+    z-index: 1;
+}
+
+.checkpoint-item:last-child .checkpoint-line {
+    display: none;
+}
+
+.checkpoint-content {
+    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    font-size: 14px;
+    margin-left: 12px;
+}
+
+ 

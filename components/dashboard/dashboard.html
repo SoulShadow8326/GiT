@@ -1,0 +1,95 @@
+{{define "dashboard"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#131520" />
+    <meta name="description" content="Website for Exun Girls in Tech 2025" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Girls in Tech | Dashboard</title>
+    <link rel="stylesheet" href="/components/main.css">
+    <link rel="stylesheet" href="/components/dashboard/dashboard.css">
+</head>
+<body>
+    {{template "header" .}}
+    <div class="admin-chat-wrap" style="min-height: 70%;">
+        <div class="admin-chat-sidebar">
+        <h2>Conversations</h2>
+        <div id="adminChatList" class="admin-chat-list"></div>
+        </div>
+    <div class="admin-chat-main">
+        <div id="adminChatHeader" class="admin-chat-header">Select a conversation</div>
+        <div id="adminChatMessages" class="admin-chat-messages"></div>
+        <div class="admin-chat-input">
+            <input type="text" id="adminChatInput" class="form-input" placeholder="Type a message..." />
+            <button id="adminChatSend" class="button">Send</button>
+            <button id="adminMarkRead" class="button">Mark as read</button>
+        </div>
+        </div>
+        <div class="admin-check-sidebar">
+        <h2>Internal Checkpoints</h2>
+        <div id="adminCheckList" class="admin-check-list"></div>
+        </div>
+    </div>
+
+    <div class="admin-chat-wrap" style="min-height: 70%; margin-top:18px;">
+        <div class="admin-chat-sidebar">
+        <h2>CTF Conversations</h2>
+        <div id="adminChatListCTF" class="admin-chat-list"></div>
+        </div>
+    <div class="admin-chat-main">
+        <div id="adminChatHeaderCTF" class="admin-chat-header">Select a CTF conversation</div>
+        <div id="adminChatMessagesCTF" class="admin-chat-messages"></div>
+        <div class="admin-chat-input">
+            <input type="text" id="adminChatInputCTF" class="form-input" placeholder="Type a message..." />
+            <button id="adminChatSendCTF" class="button">Send</button>
+            <button id="adminMarkReadCTF" class="button">Mark as read</button>
+        </div>
+        </div>
+        <div class="admin-check-sidebar">
+        <h2>CTF Checkpoints</h2>
+        <div id="adminCheckListCTF" class="admin-check-list"></div>
+        </div>
+    </div>
+
+    <div class="admin-hints-wrap" style="margin-top:18px;">
+        <h2>Hints</h2>
+        <div id="adminLeadsPanel" class="admin-leads-panel" style="margin-top:8px;">
+            <select id="leadLevelSelect" class="form-input"></select>
+            <div style="margin-top:8px; display:flex; gap:8px;">
+                <input id="leadContentInput" class="form-input" placeholder="Hint Content" style="min-width: 65vw;" />
+                <button id="leadAddBtn" class="button">Add</button>
+            </div>
+        </div>
+
+        <div id="allLeadList" style="margin-top:16px; display:flex; flex-direction:column; gap:12px;"></div>
+    </div>
+    {{template "footer" .}}
+    <script>
+        (function(){
+            var el = document.currentScript;
+            try { window.__adminEmail = el.getAttribute('data-email') || ''; } catch(e) { window.__adminEmail=''; }
+            if (!window.__adminEmail) {
+                try {
+                    fetch('/api/me', { credentials: 'same-origin' }).then(function(resp){ if (!resp.ok) return null; return resp.json(); }).then(function(js){ if (js && js.email && js.admin) window.__adminEmail = js.email || ''; }).catch(function(){});
+                } catch(e) {}
+            }
+        })();
+    </script>
+    <script id="levels-data" type="application/json">{{.LevelsData}}</script>
+    <script>
+        (function(){
+            try {
+                var el = document.getElementById('levels-data');
+                window.__adminLevels = JSON.parse(el ? el.textContent || '{}' : '{}');
+            } catch(e) { window.__adminLevels = {}; }
+        })();
+    </script>
+    <script defer type="module" src="/components/dashboard/dashboard.js?v=2" data-email='{{with .User}}{{index . "email"}}{{end}}'></script>
+</body>
+</html>
+{{end}}

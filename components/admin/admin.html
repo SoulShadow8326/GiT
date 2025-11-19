@@ -1,0 +1,288 @@
+{{define "admin"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#131520" />
+    <meta name="description" content="Website for Exun Girls in Tech 2025" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title>Girls in Tech | Admin</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="/components/admin/admin.css">
+    <link rel="stylesheet" href="/components/main.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"
+        integrity="sha512-LhccdVNGe2QMEfI3x4DVV3ckMRe36TfydKss6mJpdHjNFiV07dFpS2xzeZedptKZrwxfICJpez09iNioiSZ3hA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+        #displayBox a {
+            color: var(--primary);
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="admin-page">
+        {{template "header" .}}
+
+        <div class="levels-wrap" style="min-height: 70%;">
+            <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;">
+                <button class="btn-primary" id="turnOnAllLeads">Turn On All</button>
+                <button class="btn-primary" id="turnOffAllLeads">Turn Off All</button>
+                <button class="btn-primary" id="toggleAILeads">AI Leads: ?</button>
+            </div>
+            {{.LevelsHTML}}
+
+            <div class="level-add" onclick="openPopup(-1)">
+                <p>+</p>
+            </div>
+        </div>
+
+        <div class="announcements-admin" style="margin-top: 24px;">
+            <h2>Announcements</h2>
+            <div style="display:flex;gap:12px;align-items:center;">
+                <button class="btn-primary" id="addAnnouncementBtn">Add Announcement</button>
+            </div>
+            <div id="adminAnnouncementsList" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+            </div>
+        </div>
+
+        <div class="admin-users" style="margin-top: 24px;">
+            <h2>All Users</h2>
+            <div id="adminUsersList" style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+                <div style="color:rgba(255,255,255,0.6);font-size:13px">Loading users...</div>
+            </div>
+        </div>
+
+        <div id="popupContainer" class="popup-container hidden">
+
+            <div id="popupContent" class="popup-content">
+
+                <div class="popup-body">
+                    <p id="level_id" class="level-title">Level 0</p>
+
+                    <div class="popup-main">
+                        <div class="display-box">
+                            <div id="displayBox"></div>
+                        </div>
+                        <div class="editor-box">
+                            <textarea id="inputField" placeholder="Enter Markdown or URL" style="font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col" style="flex:1;">
+                            <p class="form-label">Walkthrough</p>
+                            <div id="walkthroughParts" style="display:flex;flex-direction:column;gap:8px;">
+                                <textarea class="walkthrough-part form-input" data-index="0" placeholder="Walkthrough part 0" style="min-height:120px;resize:vertical;"></textarea>
+                            </div>
+                            <div style="margin-top:8px;display:flex;gap:8px;">
+                                <button type="button" id="addWalkthroughPartBtn" class="btn-primary">Add walkthrough portion</button>
+                                <button type="button" id="clearWalkthroughPartsBtn" class="btn-primary" style="background:#444;">Remove walkthrough portion</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-col">
+                            <p class="form-label">Source Hint</p>
+                            <input type="text" id="sourceHintField" class="form-input" placeholder="Source Hint">
+                        </div>
+
+                        <div class="form-col">
+                            <p class="form-label">Answer</p>
+                            <input type="text" id="answerField" class="form-input" placeholder="Answer">
+                        </div>
+
+                        <div class="form-col">
+                            <p class="form-label">Level Id</p>
+                            <input type="text" id="levelId" class="form-input" placeholder="Level Id">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="popup-actions">
+                    <button class="btn-primary" onclick="submitForm()">Submit</button>
+                    <button class="btn-primary" onclick="deleteLevel()">Delete</button>
+                    <button class="btn-primary" onclick="closePopup()">Cancel</button>
+                </div>
+
+                <button class="popup-close" onclick="closePopup()">
+                    <svg width="26" height="26" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2L2 14" stroke="white" stroke-width="2" stroke-linecap="square" stroke-linejoin="round" />
+                        <path d="M2 2L14 14" stroke="white" stroke-width="2" stroke-linecap="square" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {{template "footer" .}}
+    </div>
+
+    <script id="levels-data" type="application/json">{{.LevelsData}}</script>
+    <script>
+        var levelsData = {};
+        try {
+            var el = document.getElementById('levels-data');
+            levelsData = JSON.parse(el ? el.textContent || '{}' : '{}');
+        } catch (e) {
+            console.error('Failed to parse levelsData', e);
+            levelsData = {};
+        }
+    </script>
+    <script defer src="components/admin/admin.js"></script>
+
+    <div id="annModal" class="popup-container hidden" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:1200;">
+        <div style="background:#0f1724;padding:18px;border-radius:8px;max-width:720px;width:100%;color:inherit;">
+            <h3 id="annModalTitle">New Announcement</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+                <input id="annId" placeholder="id (optional)" style="padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit" />
+                <textarea id="annContent" placeholder="Announcement content" rows="6" style="padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:inherit"></textarea>
+                <div style="display:flex;gap:8px;justify-content:flex-end;">
+                    <button class="btn-primary" id="annSaveBtn">Save</button>
+                    <button class="btn-primary" id="annCloseBtn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminConfirmModal" class="popup-container hidden" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:1250;">
+        <div style="background:#0f1724;padding:18px;border-radius:8px;max-width:560px;width:100%;color:inherit;">
+            <div id="adminConfirmMessage" style="margin-bottom:12px;color:rgba(255,255,255,0.9)"></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+                <button id="adminConfirmCancel" class="btn-primary" style="background:#444">Cancel</button>
+                <button id="adminConfirmOk" class="btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    async function fetchAdminAnnouncements() {
+        try {
+            const res = await fetch('/api/announcements', { credentials: 'same-origin' })
+            if (!res.ok) return []
+            const list = await res.json().catch(() => [])
+            return Array.isArray(list) ? list : []
+        } catch (e) {
+            return []
+        }
+    }
+
+    function renderAdminAnnouncement(a) {
+        const time = a.time || ''
+        const txt = a.text || ''
+        const id = a.id || ''
+        const el = document.createElement('div')
+        el.style.padding = '8px'
+        el.style.borderRadius = '6px'
+        el.style.background = 'rgba(255,255,255,0.02)'
+        el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px"><div style="flex:1"><div style="font-size:13px;color:rgba(255,255,255,0.9);margin-bottom:6px">${escapeHtml(txt)}</div><div style="font-size:12px;color:rgba(255,255,255,0.5)">${formatTime(time)}</div></div><div style="display:flex;flex-direction:column;gap:6px"><button class="btn-primary ann-edit" data-id="${escapeHtml(id)}">Edit</button><button class="btn-primary ann-delete" data-id="${escapeHtml(id)}" style="background:#444;padding:6px 8px">Delete</button></div></div>`
+        return el
+    }
+
+    function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]})}
+
+    function formatTime(t){
+        if (!t) return ''
+        const n = Number(t)
+        if (Number.isNaN(n)) return String(t)
+        try { return new Date(n*1000).toLocaleString() } catch(e){ return String(t) }
+    }
+
+    async function reloadAdminAnnouncements() {
+        const list = await fetchAdminAnnouncements()
+        const container = document.getElementById('adminAnnouncementsList')
+        if (!container) return
+        container.innerHTML = ''
+        const filter = (document.getElementById('annSearch')||{}).value || ''
+        for (const item of list) {
+            if (filter && String(item.text||'').toLowerCase().indexOf(filter.toLowerCase()) === -1) continue
+            container.appendChild(renderAdminAnnouncement(item))
+        }
+    }
+
+    const _addAnnouncementBtn = document.getElementById('addAnnouncementBtn')
+    if (_addAnnouncementBtn) _addAnnouncementBtn.addEventListener('click', ()=>{
+        const idEl = document.getElementById('annId')
+        const contentEl = document.getElementById('annContent')
+        if (idEl) idEl.value = ''
+        if (contentEl) contentEl.value = ''
+        const titleEl = document.getElementById('annModalTitle')
+        if (titleEl) titleEl.innerText = 'New Announcement'
+        const m = document.getElementById('annModal')
+        if (m) m.style.display = 'flex'
+    })
+
+    const _annCloseBtn = document.getElementById('annCloseBtn')
+    if (_annCloseBtn) _annCloseBtn.addEventListener('click', ()=>{
+        const m = document.getElementById('annModal')
+        if (m) m.style.display = 'none'
+    })
+
+    const _annSaveBtn = document.getElementById('annSaveBtn')
+    if (_annSaveBtn) _annSaveBtn.addEventListener('click', ()=>{
+        const idEl = document.getElementById('annId')
+        const contentEl = document.getElementById('annContent')
+        const id = idEl ? idEl.value.trim() : ''
+        const content = contentEl ? contentEl.value.trim() : ''
+        if (!content) return
+        const form = document.getElementById('annCreateForm')
+        if (!form) return
+        if (form.elements['id']) form.elements['id'].value = id
+        if (form.elements['content']) form.elements['content'].value = content
+        form.submit()
+    })
+
+    async function handleEditDeleteClicks(e) {
+        const t = e.target
+            if (t.classList.contains('ann-edit')) {
+            const id = t.getAttribute('data-id')
+            const list = await fetchAdminAnnouncements()
+            const item = list.find(x => String(x.id) === String(id)) || {}
+            document.getElementById('annId').value = item.id || ''
+            document.getElementById('annContent').value = item.text || ''
+            document.getElementById('annModalTitle').innerText = 'Edit Announcement'
+            document.getElementById('annModal').style.display = 'flex'
+        } else if (t.classList.contains('ann-delete')) {
+            const id = t.getAttribute('data-id')
+            if (!id) return
+            const form = document.getElementById('annDeleteForm')
+            form.elements['id'].value = id
+            form.submit()
+        }
+    }
+
+    const _annSearch = document.getElementById('annSearch')
+    if (_annSearch) _annSearch.addEventListener('input', ()=>{ reloadAdminAnnouncements() })
+
+    window.addEventListener('load', ()=>{
+        reloadAdminAnnouncements()
+        const _adminList = document.getElementById('adminAnnouncementsList')
+        if (_adminList) _adminList.addEventListener('click', handleEditDeleteClicks)
+    })
+    </script>
+
+    <form id="annCreateForm" method="POST" action="/admin/announcement/create" style="display:none;">
+        <input type="hidden" name="id" />
+        <input type="hidden" name="content" />
+    </form>
+
+    <form id="annDeleteForm" method="POST" action="/admin/announcement/delete" style="display:none;">
+        <input type="hidden" name="id" />
+    </form>
+
+</body>
+
+</html>
+{{end}}

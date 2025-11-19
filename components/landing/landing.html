@@ -1,0 +1,71 @@
+{{define "landing"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#131520" />
+    <meta name="description" content="Website for Girls in Tech 2025" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title>Girls in Tech | Home</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="/components/main.css">
+    <link rel="stylesheet" href="/components/landing/landing.css">
+    <link rel="stylesheet" href="/components/sponsors/sponsors.css">
+</head>
+
+<body>
+    {{template "header" .}}
+    
+    {{template "confetti" .}}
+
+        <div id="random" class="section">
+            <div class="transition-container">
+                <div class="inner" padding-bottom: 1rem;>
+                    <h4 class="main-title">Girls in Tech <span style="color: #De3163;">2025</span></h4>
+                    <div class="wrapper">
+                        <div class="intro">
+                            <p style="text-align: center;">This is a platform created by <a href="https://exunclan.com/" target="_blank" class="link" style="font-weight: 550;">Exun Clan</a>.</p>
+                            <p style="text-align: center;">All participants are recommended to read the <a href="https://exun.co/resources/cryptic" target="_blank" class="link" style="font-weight: 550;">Cryptic Hunt resources</a>.</p>
+
+        <div class="notice" style="text-align: center;">
+            <p>
+                <span class="highlight">Girls in Tech 2025</span> is here!<br>
+                The technology club of DPS R.K. Puram, <strong>Exun Clan</strong>, proudly presents its annual
+                <span class="highlight">Girls in Tech</span>, a fast–paced, high–intensity tech event designed to push creativity, strategy, and problem-solving to the limit.
+                <br><br>
+                Teams will compete in a rapid-fire series of technical challenges spanning coding, logic, design thinking, and real-time decision making — all compressed into an electrifying 4-hour sprint.
+                <br><br>
+                <span class="highlight">GiT 2025</span> brings a refined format, tougher challenges, and an elevated competitive environment.
+                <br><br>
+                The 6-hour event will run from <strong>6:00 PM IST to 12:00 AM IST on 19th November 2025</strong>.
+            </p>
+        </div>
+
+                        </div>
+                        <div class="btn">
+                            <a href="/auth" class="cta-button">Pre-Register For Girls in Tech 2025</a>
+                        </div>
+        <section class="events-section" style="padding-top: 5vw;">
+                <h2 class="sponsors-title" style="font-size: 4rem;">Event Partners
+        {{template "sponsors" .Sponsors}}
+    </h2>
+
+                    </div>
+                    {{template "countdown" .}}
+                </div>
+            </div>
+        </div>  
+        {{template "footer" .}}
+        <script src="/components/sponsors/sponsors.js"></script>
+</body>
+
+</html>
+{{end}}

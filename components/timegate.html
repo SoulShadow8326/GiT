@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="../assets/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#131520" />
+    <meta name="description" content="Website for Girls in Tech 2025" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <title>Girls in Tech | Timegate</title>
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="/components/main.css">
+    <link rel="stylesheet" href="/components/landing/landing.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <style>
+    @media (max-width: 767px) {
+        #random { padding-bottom: 50vh !important; }
+    }
+    @media (max-width: 420px) {
+        #random { padding-bottom: 55vh !important; }
+    }
+    .inner {
+    padding-top: 4rem;
+    }
+
+    .section {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4vw 1.5rem;
+        box-sizing: border-box;
+    }
+
+    .inner { max-width: 1000px; width: 100%; text-align: center; }
+
+    .brand-title { font-family: 'Montserrat', sans-serif; color: #ffffff; font-size: 28px; letter-spacing: -0.5px; margin-bottom: 1rem; }
+    .brand-title .ver { color: var(--primary); font-weight: 700; margin-left: 6px; }
+
+    .countdown-title { font-size: 32px; margin-bottom: 0.6rem; }
+    @media (max-width: 767px) { .countdown-title { font-size: 22px } .brand-title { font-size: 20px } }
+
+    @media (max-width: 767px) {
+    .inner {
+        padding-top: calc(4rem + 10rem);
+    }
+    }
+    </style>
+</head>
+<body>
+
+    {{template "header" .}}
+
+    {{template "confetti" .}}
+
+        <div id="random" class="section">
+            <div class="transition-container">
+                <div class="inner">
+                    <div class="brand-title">Girls in Tech <span class="ver">2025</span></div>
+                    {{if .IsEventOver}}
+                    <h1 class="countdown-title">The Hunt Has Ended</h1>
+                    <div class="wrapper">
+                        <div id="countdown">
+                            <p style="text-align:center; font-size:18px;">Thank you for participating. The event is now officially over.</p>
+                        </div>
+                    </div>
+                    {{else}}
+                    {{template "countdown" .}}
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        {{template "footer" .}}
+
+<script>
+try {
+    const params = new URLSearchParams(window.location.search || '')
+    if (params.get('toast') === '1') {
+        const from = params.get('from') || ''
+        const notyf = typeof Notyf !== 'undefined' ? new Notyf() : null
+        if (notyf) {
+            notyf.success('Login successful!')
+        }
+        const cleanUrl = window.location.pathname + window.location.hash
+        if (history && history.replaceState) {
+            history.replaceState(null, '', cleanUrl)
+        }
+    }
+} catch (err) {
+}
+</script>
+</body>
+
+</html>
